@@ -2,7 +2,7 @@
 Genome assembly pipeline and scripts for *Rhodeus sinensis*, submitted as a Genome Report to *G3: Genes, Genomes, Genetics*.
 
 ## Project Overview
-This project provides a high-quality, chromosome-level genome assembly for **Rhodeus sinensis**, a freshwater fish species known for its unique symbiotic reproductive strategy within unionid mussels. This resource aims to facilitate comparative genomics and evolutionary studies on reproductive specialization and adaptation in bitterlings.
+This project provides a high-quality, chromosome-level genome assembly for ***Rhodeus sinensis***, a freshwater fish species known for its unique symbiotic reproductive strategy within unionid mussels. This resource aims to facilitate comparative genomics and evolutionary studies on reproductive specialization and adaptation in bitterlings.
 
 ### Genome Assembly Highlights
 We integrated multiple sequencing technologies to achieve a highly contiguous and complete reference genome:
@@ -63,7 +63,7 @@ All raw sequencing data are available in the NCBI Sequence Read Archive (SRA) un
 
 ## Citation
 If you use the data or scripts from this repository, please cite:
-Jeong et al. (2026). Chromosome-level genome assembly of a bitterling species, Rhodeus sinensis (Acheilognathidae), provides insights into genomic adaptations to a mussel-dependent reproductive system. (In preparation).
+Jeong et al. (2026). Chromosome-level genome assembly of a bitterling species, *Rhodeus sinensis* (Acheilognathidae), provides insights into genomic adaptations to a mussel-dependent reproductive system. (In preparation).
 ---
 
 ## Contact
