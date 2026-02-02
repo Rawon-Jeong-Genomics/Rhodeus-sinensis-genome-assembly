@@ -6,7 +6,7 @@
 
 # 1. Path Setup
 QUERY_PROTEIN="Danio_rerio_proteins.fasta"
-TARGET_GENOME="rs_final_chromosome_level.fasta"
+TARGET_GENOME="asm.final.FINAL.full_mask.soft.fasta"
 OUTPUT_DIR="./homology_results"
 
 mkdir -p $OUTPUT_DIR
