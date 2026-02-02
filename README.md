@@ -14,7 +14,7 @@ We integrated multiple sequencing technologies to achieve a highly contiguous an
 ### Key Findings
 * **Synteny:** Broad conservation with *Danio rerio* (Zebrafish), featuring specific chromosomal rearrangements.
 * **Gene Family Dynamics:**
-    * **Contractions:** Significant loss in gene families related to **high-energy metabolism**, likely an adaptation to the hypoxic environment inside host mussels.
+    * **Contractions:** Significant loss in gene families related to **high-energy metabolism**.
     * **Expansions:** Enrichment in **sensory perception** and **signal transduction** pathways.
 ---
 
@@ -27,14 +27,14 @@ We integrated multiple sequencing technologies to achieve a highly contiguous an
 - 04_Phylogenomics/: OrthoFinder inference, IQ-TREE phylogeny, and CAFE5 gene family analysis.
 
 ### data/
-- data/annotation/rs_final_annotation.gff3.gz: Final curated gene models for R. sinensis.
+- data/annotation/rs_final_annotation.gff3.gz: Final curated gene models for *R. sinensis*.
 
 ---
 
 ## Data Availability
 
 ### Genome Assembly & Accession
-The Whole Genome Shotgun project for Rhodeus sinensis has been deposited at DDBJ/ENA/GenBank under the accession JBPQOI000000000. 
+The Whole Genome Shotgun project for *R. sinensis* has been deposited at DDBJ/ENA/GenBank under the accession JBPQOI000000000. 
 - Current Version described in this paper: JBPQOI010000000
 
 ### NCBI BioProject & BioSample
