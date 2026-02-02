@@ -16,7 +16,6 @@ orthofinder -f $PROTEIN_DIR \
             -t $THREADS \
             -M msa \
             -A mafft \
-            -T iqtree \
             -S diamond
 
 echo "=========================================================="
