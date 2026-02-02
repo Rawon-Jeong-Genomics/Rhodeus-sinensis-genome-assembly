@@ -1,11 +1,21 @@
 # Rhodeus-sinensis-genome-assembly
-Genome assembly pipeline and scripts for Rhodeus sinensis, submitted as a Genome Report to G3: Genes, Genomes, Genetics.
-
-This repository contains the bioinformatic pipelines and key annotation datasets for the chromosome-level genome assembly of the rosy bitterling, Rhodeus sinensis.
+Genome assembly pipeline and scripts for *Rhodeus sinensis*, submitted as a Genome Report to *G3: Genes, Genomes, Genetics*.
 
 ## Project Overview
-The study provides a high-quality reference genome of R. sinensis to investigate its evolutionary history, including chromosomal evolution (synteny) and gene family dynamics (expansion/contraction) within the Cypriniformes order.
+This project provides a high-quality, chromosome-level genome assembly for **Rhodeus sinensis**, a freshwater fish species known for its unique symbiotic reproductive strategy within unionid mussels. This resource aims to facilitate comparative genomics and evolutionary studies on reproductive specialization and adaptation in bitterlings.
 
+### Genome Assembly Highlights
+We integrated multiple sequencing technologies to achieve a highly contiguous and complete reference genome:
+- **Assembly Size:** 0.77 Gb
+- **Contiguity:** Scaffold N50 of **30.06 Mb**
+- **Completeness:** **96.0% BUSCO** score (Actinopterygii)
+- **Scaffolding:** 24 chromosome-scale scaffolds, representing **98.3%** of the total assembly.
+
+### Key Findings
+* **Synteny:** Broad conservation with *Danio rerio* (Zebrafish), featuring specific chromosomal rearrangements.
+* **Gene Family Dynamics:**
+    * **Contractions:** Significant loss in gene families related to **high-energy metabolism**, likely an adaptation to the hypoxic environment inside host mussels.
+    * **Expansions:** Enrichment in **sensory perception** and **signal transduction** pathways.
 ---
 
 ## Repository Structure
