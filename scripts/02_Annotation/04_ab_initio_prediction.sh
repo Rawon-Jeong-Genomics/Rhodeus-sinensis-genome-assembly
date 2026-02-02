@@ -41,3 +41,4 @@ perl zff2gff3.pl rs_snap_output.zff > rs_snap_output.gff3
 echo "=========================================================="
 echo "Ab initio prediction and format conversion complete."
 echo "=========================================================="
+
