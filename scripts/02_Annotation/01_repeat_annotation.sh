@@ -4,7 +4,7 @@
 # Software: RepeatModeler v2.0.3, RepeatMasker v4.1.2
 
 # 1. Path Setup
-FINAL_ASSEMBLY="rs_final_chromosome_level.fasta"
+FINAL_ASSEMBLY="asm.final.FINAL.full_mask"
 THREADS=32
 DB_NAME="Rhodeus"
 
