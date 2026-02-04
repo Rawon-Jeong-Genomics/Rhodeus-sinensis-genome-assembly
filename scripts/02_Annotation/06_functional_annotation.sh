@@ -12,6 +12,8 @@ echo "=========================================================="
 echo "Step 1: Functional search with Best-Hit Filtering"
 echo "=========================================================="
 
+update_blastdb.pl --decompress --num_threads 8 swissprot nr 
+
 # 1.1 NCBI Nr
 echo "Running BLASTP against NCBI Nr..."
 blastp -query $QUERY_PROTEIN -db nr -out rs_blastp_nr_full.out \
