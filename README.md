@@ -23,7 +23,7 @@ We integrated multiple sequencing technologies to achieve a highly contiguous an
 ### scripts/
 - 01_Assembly/: Genome assembly via PacBio HiFi and Hi-C scaffolding (Juicebox, 3D-DNA).
 - 02_Annotation/: Repeat masking, gene prediction (EVM), and functional annotation.
-- 03_Synteny/: Chromosomal synteny analysis against D. rerio using MCScanX and D-GENIES.
+- 03_Synteny/: Chromosomal synteny analysis against *D. rerio* using MCScanX and D-GENIES.
 - 04_Phylogenomics/: OrthoFinder inference, IQ-TREE phylogeny, and CAFE5 gene family analysis.
 
 ### data/
