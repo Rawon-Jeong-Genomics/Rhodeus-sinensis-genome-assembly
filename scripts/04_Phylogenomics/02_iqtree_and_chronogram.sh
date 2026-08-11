@@ -1,52 +1,110 @@
 #!/bin/bash
-# Description: Phylogenetic reconstruction and chronogram conversion
-# Software: IQ-TREE v1.5.5, R (Ape package v5.7-1)
-# Reference: Paradis and Schliep 2019; Nguyen et al. 2015
+# Description: Maximum likelihood phylogeny and divergence time estimation
+# Journal: G3: Genes, Genomes, Genetics (Genome Report)
+# Software: IQ-TREE v2.2.6, PAML (MCMCTREE) v4.10.9
 
-# 1. IQ-TREE Reconstruction
-echo "=========================================================="
-echo "Step 1: Maximum-Likelihood Tree Reconstruction (IQ-TREE)"
-echo "=========================================================="
-# -s: input alignment, -m: model selection (MFP), -bb: UFBoot (1000)
-# Output: concatenated_alignment.phy.treefile
-iqtree -s concatenated_alignment.phy -m MFP -bb 1000 -alrt 1000 -nt AUTO
+ALIGNMENT_FA="SpeciesTreeAlignment.fa"
+ALIGNMENT_PHY="alignment.phy"
+TREE="mcmctree_input.nwk"
+CTL_STEP1="mcmctree_step1.ctl"
+CTL_STEP2="mcmctree_step2.ctl"
 
 echo "=========================================================="
-echo "Step 2: Converting to Ultrametric Chronogram in R"
+echo "Step 1: Maximum Likelihood Tree Reconstruction (IQ-TREE2)"
 echo "=========================================================="
+# SH-aLRT and UFBoot with 1000 replicates using ModelFinder (MFP)
+iqtree2 -s $ALIGNMENT_FA \
+        -m MFP \
+        --alrt 1000 \
+        -B 1000 \
+        -nt 16
 
-# 2. Running R script for Chronos Calibration
-Rscript - <<'EOF'
-library(ape)
+echo "=========================================================="
+echo "Step 2: Generating MCMCTREE Control Files (PAML)"
+echo "=========================================================="
+# Generating Control File for Step 1 (Calculate Hessian Matrix)
+cat <<EOF > $CTL_STEP1
+seed = -1
+seqfile = $ALIGNMENT_PHY
+treefile = $TREE
+mcmcfile = mcmc.txt
+outfile = out.txt
 
-# 1. Load the Tree (Using the standardized output name from IQ-TREE)
-# Replace 'concatenated_alignment.phy.treefile' with your actual result path
-phy <- read.tree("concatenated_alignment.phy.treefile")
+ndata = 1
+seqtype = 2        * 2: Amino Acids
+usedata = 3        * 3: Calculate Hessian Matrix (in.BV)
+clock = 2          * 2: Independent rates (Relaxed clock)
+RootAge = '<3.0'   * Max root age bounded at 300 MYA
 
-# 2. Define MRCA Nodes for Calibration (Fossil-based)
-Clu <- getMRCA(phy, c("Esox_lucius.fEsoLuc1.pri.pep.all", "Clupea_harengus.Ch_v2.0.2v2.pep.all")) 
-Oto <- getMRCA(phy, c("Clupea_harengus.Ch_v2.0.2v2.pep.all","Danio_rerio.GRCz11.pep.all"))
-Oto2 <- getMRCA(phy, c("Danio_rerio.GRCz11.pep.all", "Electrophorus_electricus.fEleEle1.pri.pep.all"))
-Cha <- getMRCA(phy, c("Electrophorus_electricus.fEleEle1.pri.pep.all", "Pygocentrus_nattereri.fPygNat1.pri.pep.all"))
+model = 2          * 2: Empirical substitution model (WAG)
+aaRatefile = wag.dat
 
-# 3. Set Calibration Points (Million Years Ago)
-calibs <- makeChronosCalib(phy,
-                           node = c(Clu, Oto, Oto2, Cha),
-                           age.min = c(250, 230, 180, 150),
-                           age.max = c(250, 230, 180, 150))
+alpha = 0.5        * alpha for gamma rates at sites
+ncatG = 5          * No. categories in discrete gamma
+cleandata = 0      * Ambiguous characters masked as gaps
 
-# 4. Chronogram Estimation (chronos function)
-time_tree <- chronos(phy, calibration = calibs)
+BDparas = 1 1 0.1 C
+alpha_gamma = 1 1      
 
-# 5. Validation and Export
-if(is.ultrametric(time_tree)) {
-    write.tree(time_tree, file = "ultrametric_tree_for_cafe.nwk")
-    cat("Ultrametric tree has been successfully saved for CAFÉ5 analysis.\n")
-} else {
-    cat("Warning: The generated tree is NOT ultrametric.\n")
-}
+rgene_gamma = 2 13 1   
+sigma2_gamma = 1 10 1  
+
+finetune = 1: .1 .1 .1 .1 .1 .1
+print = 1
+burnin = 20000
+sampfreq = 50
+nsample = 200000
+EOF
+
+# Generating Control File for Step 2 (Actual MCMC Sampling)
+cat <<EOF > $CTL_STEP2
+seed = 3
+seqfile = $ALIGNMENT_PHY
+treefile = $TREE
+mcmcfile = mcmc.txt
+outfile = mcmctree_log.txt
+
+ndata = 1
+seqtype = 2        * 2: Amino Acids
+usedata = 2        * 2: Use in.BV for MCMC sampling
+clock = 2          * 2: Independent rates (Relaxed clock)
+RootAge = '<3.0'   * Max root age bounded at 300 MYA
+
+model = 2          * 2: Empirical substitution model (WAG)
+aaRatefile = wag.dat
+
+alpha = 0.5        * alpha for gamma rates at sites
+ncatG = 5          * No. categories in discrete gamma
+cleandata = 0      * Ambiguous characters masked as gaps
+
+BDparas = 1 1 0.1 C
+alpha_gamma = 1 1      
+
+rgene_gamma = 2 13 1   
+sigma2_gamma = 1 10 1  
+
+finetune = 1: .1 .1 .1 .1 .1 .1
+print = 1
+burnin = 50000
+sampfreq = 100
+nsample = 500000
 EOF
 
 echo "=========================================================="
-echo "Phylogenetic analysis and chronogram conversion complete."
+echo "Step 3: Approximate Likelihood - Step 1 (Calculate Hessian)"
+echo "=========================================================="
+mcmctree $CTL_STEP1
+
+# Run codeml to generate in.BV (Hessian matrix)
+cp tmp0001.ctl codeml.ctl
+codeml codeml.ctl
+mv rst2 in.BV
+
+echo "=========================================================="
+echo "Step 4: Approximate Likelihood - Step 2 (MCMC Sampling)"
+echo "=========================================================="
+mcmctree $CTL_STEP2
+
+echo "=========================================================="
+echo "MCMCTREE run complete. Check 'mcmctree_log.txt' and 'FigTree.tre'."
 echo "=========================================================="
