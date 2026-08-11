@@ -22,9 +22,6 @@ We integrated PacBio CLR, Illumina short reads, and Hi-C sequencing technologies
 - **`03_Synteny/`**: Macro-synteny and chromosomal rearrangement analysis among cyprinid lineages using MCScan (JCVI utility libraries).
 - **`04_Phylogenomics/`**: Orthologous gene family identification (OrthoFinder), phylogenetic reconstruction (IQ-TREE, MCMCTREE), and gene family expansion/contraction analysis (CAFE5).
 
-### `data/`
-- **`data/annotation/rs_final_annotation.gff3.gz`**: Final rigorously filtered and curated gene models (24,185 high-confidence genes) for *R. sinensis*.
-
 ---
 
 ## Data Availability
