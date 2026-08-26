@@ -1,15 +1,35 @@
 #!/bin/bash
+# ==============================================================================
 # Description: Orthologous gene family identification and multiple sequence alignment
-# Journal: G3: Genes, Genomes, Genetics (Genome Report)
 # Software: OrthoFinder
+# ==============================================================================
+
+# ==============================================================================
+# Input variables (Modify these according to your environment)
+# ==============================================================================
+# 1. Input directory
+# Specify the directory containing all the protein FASTA files (.faa)
+INPUT_DIR="./"
+
+# 2. Hardware parameters
+THREADS=24
+
+# ==============================================================================
+# Run Analysis
+# ==============================================================================
 
 echo "=========================================================="
-echo "Running OrthoFinder"
+echo "Step 1: Running OrthoFinder for Orthologous Gene Identification"
 echo "=========================================================="
-# '-f ./' assumes you are running this in the directory containing your 11 .faa protein files
-# FastTree is used for initial tree inference (-T fasttree)
-orthofinder -f ./ -S diamond -M msa -T fasttree -t 24 -a 24
+# -f: Input directory containing protein sequences
+# -S: Sequence search program (diamond)
+# -M: Method for gene tree inference (msa)
+# -T: Tree inference program (fasttree is used for initial fast tree inference)
+# -t: Number of threads for sequence search
+# -a: Number of threads for analysis
+orthofinder -f $INPUT_DIR -S diamond -M msa -T fasttree -t $THREADS -a $THREADS
 
 echo "=========================================================="
-echo "OrthoFinder complete. SpeciesTreeAlignment.fa generated."
+echo "OrthoFinder complete."
+echo "Check the 'OrthoFinder' results directory for 'SpeciesTreeAlignment.fa'."
 echo "=========================================================="
