@@ -1,45 +1,55 @@
 #!/bin/bash
-# Description: PacBio data preprocessing and Hybrid assembly using HASLR v0.8a1
-# Journal: G3: Genes, Genomes, Genetics (Genome Report)
+# ==============================================================================
+# Description: Long read data preprocessing and Hybrid assembly using HASLR
 # Software: seqtk v1.3, HASLR v0.8a1
+# ==============================================================================
 
-# 1. Data Preprocessing: Convert multiple FASTQ files to a single FASTA
+# ==============================================================================
+# Input variables (Modify these according to your environment)
+# ==============================================================================
+# 1. Long reads (e.g., PacBio CLR or Nanopore)
+# Separate multiple files with spaces if there are more than one.
+LONG_READ_INPUTS="long_read_cell1.fastq.gz long_read_cell2.fastq.gz long_read_cell3.fastq.gz"
+LONG_READ_COMBINED="combined_long_reads.fasta"
+LONG_READ_TYPE="pacbio" # Enter 'pacbio' or 'nanopore'
+
+# 2. Short reads (Illumina)
+ILLUMINA_R1="short_reads_R1.fastq.gz"
+ILLUMINA_R2="short_reads_R2.fastq.gz"
+
+# 3. Assembly parameters
+GENOME_SIZE="1.0G" # Estimated genome size
+THREADS=60
+OUTPUT_DIR="./haslr_output"
+
+# ==============================================================================
+# Run Analysis
+# ==============================================================================
+
 echo "=========================================================="
 echo "Step 1: Merging and converting FASTQ to FASTA..."
 echo "=========================================================="
 
-# Combine 3 PacBio HiFi cells and convert to FASTA format using seqtk
-cat R_sinensis_PacBio_HiFi_cell1.fastq.gz \
-    R_sinensis_PacBio_HiFi_cell2.fastq.gz \
-    R_sinensis_PacBio_HiFi_cell3.fastq.gz | seqtk seq -a - > R_sinensis_PacBio_HiFi_combined.fasta
+# Combine multiple long read files and convert to FASTA format using seqtk
+cat $LONG_READ_INPUTS | seqtk seq -a - > $LONG_READ_COMBINED
 
 # Compress the combined FASTA file
-gzip R_sinensis_PacBio_HiFi_combined.fasta
+gzip $LONG_READ_COMBINED
 
-# 2. Hybrid Assembly using HASLR
 echo "=========================================================="
-echo "Step 2: Starting Hybrid Assembly with HASLR v0.8a1..."
+echo "Step 2: Starting Hybrid Assembly with HASLR..."
 echo "=========================================================="
-
-# Define input file paths
-PACBIO_COMBINED="R_sinensis_PacBio_HiFi_combined.fasta.gz"
-ILLUMINA_R1="/mnt/data2/rawon_hic_data/01.illumina/RS29_S38_L002_R1_001.fastq.gz"
-ILLUMINA_R2="/mnt/data2/rawon_hic_data/01.illumina/RS29_S38_L002_R2_001.fastq.gz"
-
-# Set parameters
-THREADS=60
-GENOME_SIZE="0.8G"
-OUTPUT_DIR="rs_hic"
 
 # Running HASLR
-# -l: long reads, -x: read type (pacbio), -s: short reads
+# -l: long reads, -x: read type (pacbio or nanopore), -s: short reads
 haslr.py -t $THREADS \
          -o $OUTPUT_DIR \
          -g $GENOME_SIZE \
-         -l $PACBIO_COMBINED \
-         -x pacbio \
+         -l ${LONG_READ_COMBINED}.gz \
+         -x $LONG_READ_TYPE \
          -s $ILLUMINA_R1 $ILLUMINA_R2
 
 echo "=========================================================="
 echo "Assembly process completed successfully."
+echo "Results are saved in the '${OUTPUT_DIR}' directory."
 echo "=========================================================="
